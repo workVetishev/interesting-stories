@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title', 255);
             $table->text('content');
-            $table->boolean('approved')->default(false);
+            $table->boolean('approved')->default(false)->index();
             $table->timestamps();
         });
     }

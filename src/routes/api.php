@@ -3,11 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\StoryController;
 use App\Http\Controllers\Api\TagController;
-use App\Http\Controllers\Api\Admin\StoryController as AdminStoryController;
 
-
-// Route::get('/stories', [StoryController::class, 'index'])->name('showStories');
-
-    // Подключаем все API маршруты из папки api/
-    require base_path('routes/api/stories.php');
-    require base_path('routes/api/tags.php');
+// API маршруты с автоматическим префиксом /api/
+Route::get('/stories', [StoryController::class, 'index'])->name('stories.index');
+Route::get('/stories/{id}', [StoryController::class, 'show'])->name('stories.show');
+Route::post('/stories', [StoryController::class, 'store'])->name('stories.store');
+Route::get('/tags', [TagController::class, 'index'])->name('tags.index');
+Route::get('/tags/{id}/stories', [TagController::class, 'stories'])->name('tags.stories');

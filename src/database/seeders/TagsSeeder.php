@@ -32,11 +32,16 @@ class TagsSeeder extends Seeder
         ];
         foreach ( $tags as $tag )
         {
-            DB::table('tags')->insert([
-                'name' => $tag,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            DB::table('tags')->updateOrInsert(
+                [
+                    'name' => $tag
+                ],
+                [
+                    'name' => $tag,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
         }
         
     }
