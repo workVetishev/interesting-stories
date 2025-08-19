@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignId('story_id')->constrained()->onDelete('cascade');
             $table->foreignId('tag_id')->constrained()->onDelete('cascade');
             $table->timestamps();
-
             //Избегание дублей
             $table->unique(['story_id', 'tag_id']);
         });

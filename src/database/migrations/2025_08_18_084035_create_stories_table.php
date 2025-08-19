@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('title', 255);
             $table->text('content');
-            $table->boolean('approved')->default(false)->index();
+            $table->string('status', 20)->index()->default('pending');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
