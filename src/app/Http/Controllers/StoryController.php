@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -10,35 +10,15 @@ use Illuminate\Support\Facades\Validator;
 
 class StoryController extends Controller
 {
-    public function showAll(Request $request)
-    {
-        $arrStories = Story::where('approved', true)
-            ->with('tags')
-            ->latest()
-            ->paginate(10);
-
-        foreach ($arrStories as $storyData)
-        {
-            dump($storyData->title);
-            dump($storyData->content);
-            dump($storyData->approved);
-        }
-        
-    }
-
     public function showElement(Request $request, int $id)
     {
-        $showStory = Story::with('tags')->find($id);
+        $showStory = Story::with('tags', 'user')->findOrFail($id);
         if (is_null($showStory))
         {
             return response()->json(['error' => 'Такого элемента нету.']);    
         }    
 
-        dump($showStory->title);
-        dump($showStory->content);
-        dump($showStory->approved);
-
-
+        return view('show', ['story' => $showStory]);
     }
 
     public function createFrom()
