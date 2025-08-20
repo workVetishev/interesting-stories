@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Story;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -31,5 +32,32 @@ class AdminController extends Controller
         $stories = $query->latest()->paginate(10);
 
         return view('admin.index', compact('stories'));
+    }
+
+    /**
+     * Меняет статус истории на одобрено
+     * @param int $id id истории
+     * @return RedirectResponse
+     */
+    public function approve(int $id): RedirectResponse
+    {
+        $story = Story::findOrFail($id);
+
+        $story->update(['status' => Story::STATUS_PUBLISHED]);
+
+        return back()->with('success', 'История одобрена успешно');
+    }
+
+    /**
+     * Меняет статус истории на отклонено
+     * @param int $id id истории
+     * @return RedirectResponse
+     */
+    public function reject(int $id): RedirectResponse
+    {
+        $story = Story::findOrFail($id);
+        $story->update(['status' => Story::STATUS_REJECTED]);
+
+        return back()->with('success', 'История отклонена успешно');
     }
 }

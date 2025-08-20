@@ -31,7 +31,7 @@ Route::get('/stories/{id}', [StoryController::class, 'showElement'])->name('stor
 Route::get('/tags/{name}/stories', [TagController::class, 'stories'])->name('tags.show');
 
 
-Route::middleware('auth')->prefix('admin')->name('admin.')->group( function() {
+Route::middleware(['auth', 'moderator'])->prefix('admin')->name('admin.')->group( function() {
     Route::get('/stories', [AdminController::class, 'index'])->name('stories.index');
     Route::post('/stories/{id}/approve', [AdminController::class, 'approve'])->name('stories.approve');
     Route::post('/stories/{id}/reject', [AdminController::class, 'reject'])->name('stories.reject');

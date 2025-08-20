@@ -13,9 +13,7 @@
         <a href="{{ route('admin.stories.index', ['status' => 'rejected']) }}" class="btn btn-danger">Отклонены</a>
     </div>
 
-    @if (session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+
 
     @if ($stories->isEmpty())
         <div class="alert alert-info">Нет историй для отображения.</div>

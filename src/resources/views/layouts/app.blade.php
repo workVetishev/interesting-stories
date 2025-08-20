@@ -23,6 +23,9 @@
                 <a class="nav-link" href="{{ route('login') }}">Войти</a>
                 <a class="nav-link" href="{{ route('register.form') }}">Регистрация</a>
             @else
+                @if (auth()->user()->role === 'moderator')
+                    <a class="nav-link" href="{{ route('admin.stories.index') }}">Админка</a>
+                @endif
                 <a class="nav-link" href="{{ route('stories.createForm') }}">Добавить историю</a>
                 <span class="nav-link">Привет, <strong>{{ auth()->user()->name }}</strong>!</span>
                 <form action="{{ route('logout') }}" method="POST" class="d-inline">
