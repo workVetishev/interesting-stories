@@ -65,7 +65,7 @@
         <div class="tags">
             Теги:
             @foreach ($story->tags as $tag)
-                <a href="{{ route('tag.show', $tag->name) }}">#{{ $tag->name }}</a>
+                <a href="{{ route('tags.show', $tag->name) }}">#{{ $tag->name }}</a>
             @endforeach
         </div>
     @endif

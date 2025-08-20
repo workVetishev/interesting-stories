@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StoryController;
-use App\Http\Controllers\Api\TagController;
+use App\Http\Controllers\TagController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 
@@ -17,12 +17,15 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
+
 Route::middleware('auth')->group( function() {
     // Истории
+    Route::get('/stories/create', [StoryController::class, 'createForm'])->name('stories.createForm');
     Route::get('/stories/{id}', [StoryController::class, 'showElement'])->name('stories.showElement');
 
+
     //Теги
-    Route::get('/tags/{id}/stories', [TagController::class, 'stories'])->name('tag.show');
+    Route::get('/tags/{name}/stories', [TagController::class, 'stories'])->name('tags.show');
 });
 
 
@@ -31,7 +34,6 @@ Route::middleware('auth')->group( function() {
 
 Route::middleware('auth')->prefix('api')->group( function() {
     Route::get('/stories', [StoryController::class, 'showAll'])->name('stories.showAll');
-    Route::get('/stories/create', [StoryController::class, 'createForm'])->name('stories.createForm');
 
     Route::post('/stories', [StoryController::class, 'createElement'])->name('stories.createElement');
     Route::get('/tags', [TagController::class, 'index'])->name('tags.index');

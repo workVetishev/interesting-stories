@@ -68,10 +68,15 @@
 </head>
 <body>
     <a href="{{ route('home') }}" class="back-link">← На главную</a>
+    @if (session('success'))
+        <div style="color: darkgreen">
+            {{ session('success')}}
+        </div>
+    @endif
 
     <h1>Расскажи свою историю</h1>
 
-    <form method="POST" action="{{ route('story.store') }}">
+    <form method="POST" action="{{ route('stories.createElement') }}">
         @csrf
 
         <div class="form-group">

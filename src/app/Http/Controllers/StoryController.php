@@ -2,71 +2,63 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\CreateStoryRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Story;
+use App\Models\Tag;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\View\View;
+use mysql_xdevapi\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class StoryController extends Controller
 {
-    public function showElement(Request $request, int $id)
+
+    /**
+     * Показать историю
+     * @param int $id
+     * @return View
+     */
+    public function showElement(int $id): View
     {
         $showStory = Story::with('tags', 'user')->findOrFail($id);
-        if (is_null($showStory))
-        {
-            return response()->json(['error' => 'Такого элемента нету.']);    
-        }    
 
         return view('show', ['story' => $showStory]);
     }
 
-    public function createFrom()
+    /**
+     * Показать форму создания истории
+     * @return View
+     */
+    public function createForm(): View
     {
-        return view('story.create');
+        return view('create');
     }
 
-    public function createElement(Request $request)
+
+    public function createElement(CreateStoryRequest $request)
     {
-        $validated = [];
 
-        $rules = [
-            'title'             => ['required', 'string', 'max:255'],
-            'content'           => ['required', 'string'],
-            'approved'          => ['boolean']
-        ];
 
-        $message = [
-            'title.required'    => ':attribute обезательное для заполнения',
-            'title.max'         => 'Максимальная длина :attribute 255 символов',
-            'title.string'      => 'Поле :attribute должно быть строкой',
+        $story = Auth::user()->stories()->create([
+            'title' => $request->title,
+            'content' => $request->content,
+            'status' => 'pending',
+        ]);
 
-            'content'           => 'Поле :attrribute обезательное для заполнения',
-            'content.string'    => 'Поле :attribute должно быть строкой',
-
-            'approved.boolean'  => 'В неправильном формате',
-        ];
-        
-        $validator = Validator::make($request->all(), $rules, $message);
-        
-        if ($validator->fails())
+        if ($request->filled('tags'))
         {
-            return Redirect::route('stories.createForm')->withErrors($validator)->withInput();
+            $tagNames = collect(explode(',',  $request->tags))
+                ->map(fn ($tagName) => trim(strtolower(str_replace('#', '', $tagName))))
+                ->filter()
+                ->unique();
+            $tags = $tagNames->map(fn ($tagName) => Tag::firstOrCreate(['name' => $tagName]));
+
+            $story->tags()->attach($tags);
+
         }
-
-        $validated = $validator->validated();
-
-
-        dump($validated['title']);
-        dump($validated['contents']);
-        dump($validated['approved']);
-        // Story::create([
-        //     'title'             => $validated['title'],
-        //     'content'           => $validated['content'],
-        //     'approved'          => $validated['approved'] ?? false,
-        // ]);
-
-        return Redirect::route('stries.createForm')->with('success', 'История создана!');
+        return redirect()->route('stories.createForm')->with('success', 'История отправлена на модерацию!');
 
     }
 }

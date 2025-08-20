@@ -8,8 +8,11 @@ use App\Models\User;
 
 class Story extends Model
 {
+    public const STATUS_PUBLISHED = 'approved';
+    public const STATUS_REJECTED = 'rejected';
+    public const STATUS_PENDING = 'pending';
 
-    protected $fillable = ['title', 'content', 'approved'];
+    protected $fillable = ['title', 'content', 'status', 'user_id'];
 
 
 

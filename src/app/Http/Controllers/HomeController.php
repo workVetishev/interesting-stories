@@ -9,11 +9,11 @@ class HomeController extends Controller
 {
     public function index(): View
     {
-        $stories = Story::where('status', 'approved')
+        $stories = Story::query()
+            ->where('status', Story::STATUS_PUBLISHED)
             ->with('user') // только автор
             ->latest()
-            ->limit(10)
-            ->get();
+            ->paginate(10);
 
         return view('home', compact('stories'));
     }
